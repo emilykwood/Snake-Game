@@ -1,6 +1,3 @@
-// Snake.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include <conio.h> 
 #include <windows.h>
@@ -9,6 +6,12 @@
 //I was getting build errors before I added this in
 void initGameVariables();
 void renderTheGame();
+int _getch();
+
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
 
 // Declare the size of the game space
 int gameHeight = 20;
@@ -21,12 +24,6 @@ int fruitX, fruitY; // holds the x and y position of the fruit the snake is tryi
 
 bool isGameOver;
 
-
-int main()
-{
-    initGameVariables();
-    renderTheGame();
-}
 
 void initGameVariables() {
     isGameOver = false;
@@ -51,8 +48,12 @@ void renderTheGame() {
             if (j == 0 || j == gameWidth - 1) {
                 std::cout << "|";
             }
+            // Position fruit within the game bounds
             else if (j == fruitX && i == fruitY) {
                 std::cout << fruit;
+                // Position snake head at centre of the screen
+            } else if (j == xPos && i == yPos) {
+                    std::cout << "O";
             } else {
                 std::cout << " ";
             }
@@ -65,4 +66,41 @@ void renderTheGame() {
     }
 
     std::cout << "\nScore: " + score;
+}
+
+int userInput() {
+    int c = 0;
+    while (1)
+    {
+        c = 0;
+
+        switch ((c = _getch())) {
+        case KEY_UP:
+            std::cout << "Up";
+            break;
+        case KEY_DOWN:
+            std::cout << "Down";
+            break;
+        case KEY_LEFT:
+            std::cout << "left";
+            break;
+        case KEY_RIGHT:
+            std::cout << "Right";
+            break;
+        }
+
+    }
+
+    return 0;
+
+}
+
+int main()
+{
+    initGameVariables();
+    renderTheGame();
+
+    while (!isGameOver) {
+        userInput();
+    }
 }
