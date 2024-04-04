@@ -22,6 +22,8 @@ int xPos, yPos; // position of the snake head
 std::string fruit = "*";
 int fruitX, fruitY; // holds the x and y position of the fruit the snake is trying to eat
 
+enum snakeDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
+snakeDirection snakeDir; //holds the value of the above
 bool isGameOver;
 
 
@@ -68,32 +70,28 @@ void renderTheGame() {
     std::cout << "\nScore: " + score;
 }
 
-int userInput() {
-    int c = 0;
-    while (1)
-    {
-        c = 0;
-
-        switch ((c = _getch())) {
+void userInput() {
+        switch (_getch()) {
         case KEY_UP:
             std::cout << "Up";
+            snakeDir = UP;
             break;
         case KEY_DOWN:
             std::cout << "Down";
+            snakeDir = DOWN;
             break;
         case KEY_LEFT:
             std::cout << "left";
+            snakeDir = LEFT;
             break;
         case KEY_RIGHT:
             std::cout << "Right";
+            snakeDir = RIGHT;
             break;
         }
 
-    }
-
-    return 0;
-
 }
+
 
 int main()
 {
