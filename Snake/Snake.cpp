@@ -2,6 +2,7 @@
 #include <conio.h> 
 #include <windows.h>
 #include <cstdlib> 
+#include <deque>
 
 //I was getting build errors before I added this in
 void initGameVariables();
@@ -24,6 +25,7 @@ int fruitX, fruitY; // holds the x and y position of the fruit the snake is tryi
 
 enum snakeDirection { STOP = 0, LEFT, RIGHT, UP, DOWN };
 snakeDirection snakeDir; //holds the value of the above
+std::deque<std::pair<int, int>> snakeBody; //deque means double ended queue allows me to add body to either end of the snake dependent on direction
 bool isGameOver;
 
 
@@ -33,11 +35,23 @@ void initGameVariables() {
     fruitY = rand() % gameHeight;
     xPos = gameWidth / 2;
     yPos = gameHeight / 2;
-    score = 0;
+    score = 0; 
+    snakeDir = STOP;
+    snakeBody.clear();
+    snakeBody.push_front({ yPos, xPos });
+
+}
+void hideCursor() {
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO cursorInfo;
+    cursorInfo.dwSize = 100; 
+    cursorInfo.bVisible = FALSE; 
+    SetConsoleCursorInfo(consoleHandle, &cursorInfo);
 }
 
 void renderTheGame() {
-    system("cls");// built-in method that clears the screen
+    system("cls");
+    hideCursor();
 
     // Now we get to drawing the borders of the game
     for (int i = 0; i < gameWidth; i++) {
@@ -67,7 +81,7 @@ void renderTheGame() {
         std::cout << "-";
     }
 
-    std::cout << "\nScore: " + score;
+    std::cout << "\nScore: " << score;
 }
 
 void userInput() {
@@ -75,21 +89,37 @@ void userInput() {
         case KEY_UP:
             std::cout << "Up";
             snakeDir = UP;
+            yPos--;
             break;
         case KEY_DOWN:
             std::cout << "Down";
             snakeDir = DOWN;
+            yPos++;
             break;
         case KEY_LEFT:
             std::cout << "left";
             snakeDir = LEFT;
+            xPos--;
             break;
         case KEY_RIGHT:
             std::cout << "Right";
             snakeDir = RIGHT;
+            xPos++;
             break;
         }
 
+}
+
+// Function to update the game state
+void updateGameState() {
+
+    // Check for collision with fruit
+    if (xPos == fruitX && yPos == fruitY) {
+        score++;
+        fruitX = rand() % gameWidth;
+        fruitY = rand() % gameHeight;
+        snakeBody.push_front({ yPos, xPos });
+    }
 }
 
 
@@ -100,5 +130,12 @@ int main()
 
     while (!isGameOver) {
         userInput();
+        updateGameState();
+        renderTheGame();
+      
     }
+
+    std::cout << "Game over! Your final Score: " << score;
+
+    return 0;
 }
