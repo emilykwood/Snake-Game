@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <windows.h>
 #include <cstdlib>
+#include <ctime>
 
 // Function declarations
 void initGameVariables();
@@ -32,6 +33,8 @@ std::pair<int, int> snakeBody[maxSnakeLength]; // Array to store snake's body
 int snakeLength = 1; // Initial length of the snake
 
 void initGameVariables() {
+    // need to include this function which seeds the random number generator using the time, in order to truly get a random int
+    srand(static_cast<unsigned int>(time(0)));
     isGameOver = false;
     fruitX = rand() % gameWidth;
     fruitY = rand() % gameHeight;
@@ -178,7 +181,7 @@ int main() {
         userInput();
         updateGameState();
         renderDynamicElements();
-        Sleep(300); // Adjust the frame rate
+        Sleep(150); // Adjust the frame rate
     }
 
     setCursorPosition(0, gameHeight + 2);
